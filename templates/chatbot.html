@@ -116,9 +116,107 @@
         border-bottom-right-radius: 4px;
     }
     .message.bot .message-bubble {
-        background: #e0e0e0;
-        color: #333;
+        background: #ffffff;
+        color: #374151;
         border-bottom-left-radius: 4px;
+        max-width: 92%;
+        border: none;
+        box-shadow: none;
+        padding: 4px 16px;
+        font-size: 15px;
+        line-height: 1.75;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    }
+    .message-bubble h3 {
+        margin: 24px 0 12px 0;
+        font-weight: 600;
+        font-size: 16px;
+        color: #111827;
+        border: none;
+        padding: 0;
+    }
+    .message-bubble h3:first-child { margin-top: 8px; }
+    .message-bubble h4 {
+        margin: 20px 0 8px 0;
+        font-weight: 600;
+        font-size: 15px;
+        color: #1f2937;
+    }
+    .message-bubble p {
+        margin: 16px 0;
+        line-height: 1.75;
+        color: #374151;
+    }
+    .message-bubble p:first-child { margin-top: 8px; }
+    .message-bubble strong {
+        font-weight: 600;
+        color: #111827;
+    }
+    .message-bubble ul, .message-bubble ol {
+        margin: 16px 0;
+        padding-left: 24px;
+    }
+    .message-bubble li {
+        margin: 10px 0;
+        line-height: 1.7;
+        color: #374151;
+        padding-left: 4px;
+    }
+    .message-bubble ul > li {
+        list-style-type: disc;
+    }
+    .message-bubble ul > li::marker {
+        color: #9ca3af;
+    }
+    .message-bubble ol > li {
+        list-style-type: decimal;
+    }
+    .message-bubble ol > li::marker {
+        color: #6b7280;
+        font-weight: 500;
+    }
+    .message-bubble .summary-box {
+        background: #f9fafb;
+        padding: 16px 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border: 1px solid #e5e7eb;
+    }
+    .message-bubble .summary-box strong {
+        color: #111827;
+    }
+    .message-bubble code {
+        background: #f3f4f6;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+        font-size: 13px;
+        color: #1f2937;
+    }
+    .message-bubble pre {
+        background: #f9fafb;
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 16px 0;
+        border: 1px solid #e5e7eb;
+    }
+    .message-bubble em {
+        font-style: italic;
+        color: #4b5563;
+    }
+    .message-bubble blockquote {
+        border-left: 3px solid #d1d5db;
+        margin: 16px 0;
+        padding: 4px 16px;
+        color: #4b5563;
+    }
+    .message-bubble a {
+        color: #2563eb;
+        text-decoration: none;
+    }
+    .message-bubble a:hover {
+        text-decoration: underline;
     }
     .chat-input {
         display: flex;
@@ -187,14 +285,17 @@
         <div class="chat-header">
             Diabetes Expert Chatbot
         </div>
-        <div class="chat-messages" id="chat-messages">
+        <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-label="Chat conversation">
             <div class="message bot">
                 <div class="message-bubble">Hello! I'm here to help you understand diabetes and answer your questions. How can I assist you today?</div>
             </div>
         </div>
+        <!-- Screen reader status announcements -->
+        <div id="sr-status" role="status" aria-live="polite" aria-atomic="true" class="sr-only" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;"></div>
         <div class="chat-input">
-            <input type="text" id="user-input" placeholder="Type your message...">
-            <button onclick="sendMessage()">Send</button>
+            <label for="user-input" class="sr-only" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;">Type your message</label>
+            <input type="text" id="user-input" placeholder="Type your message..." aria-describedby="sr-status">
+            <button onclick="sendMessage()" aria-label="Send message">Send</button>
         </div>
     </div>
     </main>
@@ -228,6 +329,9 @@
             chatMessages.appendChild(thinkingMessageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
+            // Announce to screen readers
+            announceToScreenReader('Sending message, please wait...');
+
             try {
                 const response = await fetch('/generate', {
                     method: 'POST',
@@ -246,11 +350,15 @@
 
                 const data = await response.json();
 
-                // Display bot response
+                // Display bot response with markdown formatting
                 const botMessageDiv = document.createElement('div');
                 botMessageDiv.classList.add('message', 'bot');
-                botMessageDiv.innerHTML = `<div class="message-bubble">${data.reply}</div>`;
+                const formattedReply = formatMarkdown(data.reply);
+                botMessageDiv.innerHTML = `<div class="message-bubble">${formattedReply}</div>`;
                 chatMessages.appendChild(botMessageDiv);
+
+                // Announce response to screen readers
+                announceToScreenReader('Bot replied: ' + data.reply.substring(0, 200) + (data.reply.length > 200 ? '...' : ''));
 
             } catch (error) {
                 console.error('Error:', error);
@@ -260,6 +368,9 @@
                 errorMessageDiv.classList.add('message', 'bot');
                 errorMessageDiv.innerHTML = `<div class="message-bubble">Sorry, I couldn't get a response. Please try again.</div>`;
                 chatMessages.appendChild(errorMessageDiv);
+
+                // Announce error to screen readers
+                announceToScreenReader('Error: Could not get a response. Please try again.');
             } finally {
                 // Scroll to bottom after response
                 chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -278,6 +389,97 @@
             const chatMessages = document.getElementById('chat-messages');
             chatMessages.scrollTop = chatMessages.scrollHeight;
         });
+
+        // Function to announce messages to screen readers
+        function announceToScreenReader(message) {
+            const srStatus = document.getElementById('sr-status');
+            srStatus.textContent = '';
+            // Small delay to ensure the change is detected
+            setTimeout(() => {
+                srStatus.textContent = message;
+            }, 100);
+        }
+
+        // Clean markdown parser for chat responses
+        function formatMarkdown(text) {
+            if (!text) return '';
+            
+            let html = text;
+            
+            // Escape HTML
+            html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            // Remove emoji icons from headers
+            html = html.replace(/[🔹⚙️📊📝✅⚠️🔴🎯💡●•]/g, '');
+            
+            // Headers with ### 
+            html = html.replace(/###\s*(.+?)(?=\n|$)/g, '\n<h3>$1</h3>\n');
+            
+            // Bold **text**
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            
+            // Italic *text*
+            html = html.replace(/(?<![*\w])\*([^*\n]+)\*(?![*\w])/g, '<em>$1</em>');
+            
+            // Process lines for lists
+            const lines = html.split('\n');
+            let result = [];
+            let inOl = false;
+            let inUl = false;
+            
+            for (let line of lines) {
+                line = line.trim();
+                if (!line) continue;
+                
+                // Numbered list: 1. item
+                const olMatch = line.match(/^(\d+)[\.\)]\s+(.+)$/);
+                // Bullet list: * item or - item
+                const ulMatch = line.match(/^\*\s+(.+)$/) || line.match(/^-\s+(.+)$/);
+                
+                if (olMatch) {
+                    if (!inOl) {
+                        if (inUl) { result.push('</ul>'); inUl = false; }
+                        result.push('<ol>');
+                        inOl = true;
+                    }
+                    result.push('<li>' + olMatch[2] + '</li>');
+                } else if (ulMatch) {
+                    if (!inUl) {
+                        if (inOl) { result.push('</ol>'); inOl = false; }
+                        result.push('<ul>');
+                        inUl = true;
+                    }
+                    result.push('<li>' + ulMatch[1] + '</li>');
+                } else {
+                    if (inOl) { result.push('</ol>'); inOl = false; }
+                    if (inUl) { result.push('</ul>'); inUl = false; }
+                    result.push(line);
+                }
+            }
+            if (inOl) result.push('</ol>');
+            if (inUl) result.push('</ul>');
+            
+            html = result.join('\n');
+            
+            // In Summary box
+            html = html.replace(/In [Ss]ummary[,:]\s*(.+?)(?=<h|$)/gs, '<div class="summary-box"><strong>In Summary:</strong> $1</div>');
+            
+            // Paragraphs
+            html = html.replace(/\n\n+/g, '</p><p>');
+            html = html.replace(/\n/g, ' ');
+            
+            // Wrap
+            if (!html.startsWith('<')) {
+                html = '<p>' + html + '</p>';
+            }
+            
+            // Cleanup
+            html = html.replace(/<p>\s*<(h[34]|ul|ol|div)/g, '<$1');
+            html = html.replace(/<\/(h[34]|ul|ol|div)>\s*<\/p>/g, '</$1>');
+            html = html.replace(/<p>\s*<\/p>/g, '');
+            
+            return html;
+        }
     </script>
 </body>
 </html>
