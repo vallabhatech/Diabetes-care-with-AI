@@ -66,13 +66,18 @@ jobs:
             
             if (labelsToAdd.length > 0) {
               const issueNumber = issue.number;
-              await github.rest.issues.addLabels({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issueNumber,
-                labels: labelsToAdd
-              });
-              console.log(`Added labels: ${labelsToAdd.join(', ')}`);
+              try {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber,
+                  labels: labelsToAdd
+                });
+                console.log(`Added labels: ${labelsToAdd.join(', ')}`);
+              } catch (error) {
+                console.error(`Failed to add labels: ${error.message}`);
+                console.error(`Attempted labels: ${labelsToAdd.join(', ')}`);
+              }
             } else {
               console.log('No matching keywords found, no labels added.');
             }
