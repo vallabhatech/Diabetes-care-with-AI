@@ -9,7 +9,9 @@
 <header class="bg-blue-700 text-white shadow-lg fixed top-0 left-0 right-0 z-50">
   <div class="container mx-auto flex justify-between items-center py-4 px-6">
     <h1 class="text-3xl sm:text-4xl font-extrabold tracking-wide text-white dc-text-3d">🩺 Diabetes Care</h1>
-    <nav>
+    
+    <!-- Desktop Menu -->
+    <nav class="hidden md:block">
       <ul class="flex space-x-4 sm:space-x-6 text-base sm:text-lg font-semibold">
         <li><a href="/" class="hover:text-blue-300 transition">Home</a></li>
         <li><a href="/index" class="hover:text-blue-300 transition">Prediction</a></li>
@@ -19,7 +21,35 @@
         <li><a href="/forum" class="hover:text-blue-300 transition">Forum</a></li>
       </ul>
     </nav>
+
+    <!-- Mobile Hamburger Button -->
+    <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Menu Drawer (Hidden by default) -->
+  <div id="mobile-menu" class="hidden md:hidden bg-blue-800 border-t border-blue-600">
+    <ul class="flex flex-col space-y-2 p-4 text-lg font-semibold">
+      <li><a href="/" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Home</a></li>
+      <li><a href="/index" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Prediction</a></li>
+      <li><a href="/life" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Lifestyle Check</a></li>
+      <li><a href="/chatbot" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Chatbot</a></li>
+      <li><a href="/explore" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Explore Data</a></li>
+      <li><a href="/forum" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Forum</a></li>
+    </ul>
   </div>
 </header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+
+  btn.addEventListener('click', () => {
+    menu.classList.toggle('hidden');
+  });
+</script>
 <!-- Spacer equal to header height to prevent content being overlapped -->
 <div class="h-20" aria-hidden="true"></div>

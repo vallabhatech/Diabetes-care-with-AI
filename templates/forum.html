@@ -1,57 +1,173 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Diabetes Care Forum</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style> 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    .fade-in { animation: fadeIn 0.6s ease-out forwards; }
-    .post-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .post-card:hover { transform: translateY(-5px); box-shadow: 0 15px 25px rgba(59,130,246,0.15); }
-    .btn-primary { transition: all 0.2s ease; }
-    .btn-primary:hover { transform: scale(1.05); background-color: #2563eb; }
-    .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .notification-dropdown { max-height: 400px; overflow-y: auto; }
-    .notification-item:hover { background-color: #f3f4f6; }
-    .notification-unread { background-color: #eff6ff; border-left: 3px solid #3b82f6; }
-    .modal-overlay { background-color: rgba(0, 0, 0, 0.5); }
-    .toast { animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 4.7s forwards; }
-    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    .post-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .post-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 25px rgba(59, 130, 246, 0.15);
+    }
+
+    .btn-primary {
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+      background-color: #2563eb;
+    }
+
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #3b82f6;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .notification-dropdown {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .notification-item:hover {
+      background-color: #f3f4f6;
+    }
+
+    .notification-unread {
+      background-color: #eff6ff;
+      border-left: 3px solid #3b82f6;
+    }
+
+    .modal-overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .toast {
+      animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 4.7s forwards;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
   </style>
 </head>
+
 <body class="bg-gradient-to-br from-blue-50 to-white text-gray-800 min-h-screen flex flex-col font-sans">
   <header class="bg-blue-700 text-white shadow-lg sticky top-0 z-50">
-    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center py-5 px-6">
+    <div class="container mx-auto flex justify-between items-center py-5 px-6">
       <h1 class="text-3xl md:text-4xl font-extrabold tracking-wide">🩺 Diabetes Care</h1>
-      <nav class="mt-3 md:mt-0 flex items-center gap-4">
-        <ul class="flex flex-wrap justify-center md:justify-end space-x-4 md:space-x-6 text-lg font-semibold">
-          <li><a href="/index" class="hover:text-blue-300 transition">Prediction</a></li>
-          <li><a href="/life" class="hover:text-blue-300 transition">Lifestyle Check</a></li>
-          <li><a href="/chatbot" class="hover:text-blue-300 transition">Chatbot</a></li>
-          <li><a href="/explore" class="hover:text-blue-300 transition">Explore Data</a></li>
-          <li><a href="/forum" class="hover:text-blue-300 transition font-bold">Forum</a></li>
-        </ul>
-        <div class="relative ml-4">
+
+      <div class="flex items-center gap-4">
+        <!-- Desktop Nav -->
+        <nav class="hidden md:block">
+          <ul class="flex space-x-4 md:space-x-6 text-lg font-semibold">
+            <li><a href="/index" class="hover:text-blue-300 transition">Prediction</a></li>
+            <li><a href="/life" class="hover:text-blue-300 transition">Lifestyle Check</a></li>
+            <li><a href="/chatbot" class="hover:text-blue-300 transition">Chatbot</a></li>
+            <li><a href="/explore" class="hover:text-blue-300 transition">Explore Data</a></li>
+            <li><a href="/forum" class="hover:text-blue-300 transition font-bold">Forum</a></li>
+          </ul>
+        </nav>
+
+        <!-- Notification Bell -->
+        <div class="relative">
           <button id="notificationBell" class="relative p-2 hover:bg-blue-600 rounded-full transition" type="button">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-            <span id="notificationBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">0</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+              </path>
+            </svg>
+            <span id="notificationBadge"
+              class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">0</span>
           </button>
-          <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-50">
+          <div id="notificationDropdown"
+            class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-50">
             <div class="p-4 border-b border-gray-100 flex justify-between items-center">
               <h3 class="font-semibold text-gray-800">Notifications</h3>
               <div class="flex gap-2">
-                <button id="markAllRead" class="text-xs text-blue-600 hover:text-blue-800" type="button">Mark all read</button>
+                <button id="markAllRead" class="text-xs text-blue-600 hover:text-blue-800" type="button">Mark all
+                  read</button>
                 <button id="openSettings" class="text-gray-500 hover:text-gray-700" type="button">⚙️</button>
               </div>
             </div>
-            <div id="notificationList" class="notification-dropdown"><p class="p-4 text-gray-500 text-center text-sm">No notifications yet</p></div>
+            <div id="notificationList" class="notification-dropdown">
+              <p class="p-4 text-gray-500 text-center text-sm">No notifications yet</p>
+            </div>
           </div>
         </div>
-      </nav>
+
+        <!-- Mobile Hamburger Button -->
+        <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden bg-blue-800 border-t border-blue-600">
+      <ul class="flex flex-col space-y-2 p-4 text-lg font-semibold">
+        <li><a href="/index" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Prediction</a></li>
+        <li><a href="/life" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Lifestyle Check</a></li>
+        <li><a href="/chatbot" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Chatbot</a></li>
+        <li><a href="/explore" class="block py-2 px-4 hover:bg-blue-700 rounded transition">Explore Data</a></li>
+        <li><a href="/forum" class="block py-2 px-4 hover:bg-blue-700 rounded transition font-bold">Forum</a></li>
+      </ul>
     </div>
   </header>
 
@@ -65,9 +181,13 @@
     <section class="mb-8 bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
       <h2 class="text-2xl font-semibold mb-4 text-blue-700">Share Your Story or Ask a Question</h2>
       <form id="postForm" class="flex flex-col gap-4">
-        <textarea id="postContent" rows="4" class="p-5 border border-gray-300 rounded-2xl resize-none focus:outline-none focus:ring-4 focus:ring-blue-300 placeholder-gray-400 shadow-sm" placeholder="Type your story or question here... Use @username to mention someone"></textarea>
+        <textarea id="postContent" rows="4"
+          class="p-5 border border-gray-300 rounded-2xl resize-none focus:outline-none focus:ring-4 focus:ring-blue-300 placeholder-gray-400 shadow-sm"
+          placeholder="Type your story or question here... Use @username to mention someone"></textarea>
         <div class="flex justify-between items-center">
-          <button type="submit" class="btn-primary bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-full font-semibold shadow-lg">➕ Post</button>
+          <button type="submit"
+            class="btn-primary bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-full font-semibold shadow-lg">➕
+            Post</button>
           <span class="text-gray-500 text-sm" id="charCount">0/500</span>
         </div>
       </form>
@@ -76,31 +196,57 @@
       <h3 class="text-lg font-semibold text-gray-700 mb-4">🔍 Search & Filter Posts</h3>
       <div class="mb-4">
         <div class="relative">
-          <input type="text" id="searchInput" class="w-full p-4 pl-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-400" placeholder="Search posts by keyword...">
-          <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input type="text" id="searchInput"
+            class="w-full p-4 pl-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-400"
+            placeholder="Search posts by keyword...">
+          <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
         </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div><label for="startDate" class="block text-sm font-medium text-gray-600 mb-1">From Date</label><input type="date" id="startDate" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"></div>
-        <div><label for="endDate" class="block text-sm font-medium text-gray-600 mb-1">To Date</label><input type="date" id="endDate" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"></div>
+        <div><label for="startDate" class="block text-sm font-medium text-gray-600 mb-1">From Date</label><input
+            type="date" id="startDate"
+            class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+        <div><label for="endDate" class="block text-sm font-medium text-gray-600 mb-1">To Date</label><input type="date"
+            id="endDate"
+            class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
       </div>
       <div class="flex justify-between items-center">
-        <button id="clearFilters" type="button" class="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1 transition">✕ Clear Filters</button>
+        <button id="clearFilters" type="button"
+          class="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1 transition">✕ Clear
+          Filters</button>
         <div id="activeFilters" class="text-sm text-gray-500"></div>
       </div>
       <div id="dateError" class="hidden mt-2 text-red-500 text-sm"></div>
     </section>
-    <div id="loadingIndicator" class="hidden flex justify-center items-center py-8"><div class="spinner"></div><span class="ml-3 text-gray-500">Loading posts...</span></div>
+    <div id="loadingIndicator" class="hidden flex justify-center items-center py-8">
+      <div class="spinner"></div><span class="ml-3 text-gray-500">Loading posts...</span>
+    </div>
     <section id="postsList" class="space-y-6"></section>
-    <div id="noPosts" class="text-center text-gray-400 text-lg hidden mt-6">📝 No posts yet — be the first to share!</div>
-    <div id="noResults" class="hidden text-center py-8"><p class="text-gray-500 text-lg mb-2">🔍 No posts found matching your search.</p><button id="clearFiltersFromNoResults" type="button" class="text-blue-600 hover:text-blue-800 font-medium">Clear filters and show all posts</button></div>
+    <div id="noPosts" class="text-center text-gray-400 text-lg hidden mt-6">📝 No posts yet — be the first to share!
+    </div>
+    <div id="noResults" class="hidden text-center py-8">
+      <p class="text-gray-500 text-lg mb-2">🔍 No posts found matching your search.</p><button
+        id="clearFiltersFromNoResults" type="button" class="text-blue-600 hover:text-blue-800 font-medium">Clear filters
+        and show all posts</button>
+    </div>
     <div id="paginationControls" class="hidden mt-8 flex justify-center items-center gap-4">
-      <button id="prevPage" type="button" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition">← Previous</button>
+      <button id="prevPage" type="button"
+        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition">←
+        Previous</button>
       <span id="pageInfo" class="text-gray-600 font-medium">Page 1 of 1</span>
-      <button id="nextPage" type="button" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition">Next →</button>
+      <button id="nextPage" type="button"
+        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition">Next
+        →</button>
     </div>
   </main>
-  <footer class="bg-blue-50 text-center text-gray-500 text-sm py-4 border-t mt-8">© 2025 Diabetes Care Forum. Empowering lives, one post at a time.</footer>
+  <footer class="bg-blue-50 text-center text-gray-500 text-sm py-4 border-t mt-8">© 2025 Diabetes Care Forum. Empowering
+    lives, one post at a time.</footer>
 
   <!-- Toast Notification Container -->
   <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div>
@@ -110,22 +256,42 @@
     <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 z-10">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl font-bold text-gray-800">Notification Settings</h2>
-        <button onclick="closeSettingsModal()" type="button" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+        <button onclick="closeSettingsModal()" type="button"
+          class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
       </div>
       <div class="mb-6 p-4 bg-blue-50 rounded-xl">
         <h3 class="font-semibold text-gray-700 mb-3">Your Profile</h3>
         <div class="space-y-3">
-          <div><label class="block text-sm text-gray-600 mb-1">Username</label><input type="text" id="settingsUsername" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="Enter username"></div>
-          <div><label class="block text-sm text-gray-600 mb-1">Email (for notifications)</label><input type="email" id="settingsEmail" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="your@email.com"></div>
+          <div><label class="block text-sm text-gray-600 mb-1">Username</label><input type="text" id="settingsUsername"
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              placeholder="Enter username"></div>
+          <div><label class="block text-sm text-gray-600 mb-1">Email (for notifications)</label><input type="email"
+              id="settingsEmail"
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              placeholder="your@email.com"></div>
         </div>
       </div>
       <div class="space-y-4">
         <h3 class="font-semibold text-gray-700">Email Notifications</h3>
-        <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100"><div><span class="font-medium text-gray-700">Replies to my posts</span><p class="text-sm text-gray-500">Get notified when someone replies</p></div><input type="checkbox" id="prefReplies" class="w-5 h-5 text-blue-600 rounded" checked></label>
-        <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100"><div><span class="font-medium text-gray-700">Mentions (@username)</span><p class="text-sm text-gray-500">Get notified when you're mentioned</p></div><input type="checkbox" id="prefMentions" class="w-5 h-5 text-blue-600 rounded" checked></label>
-        <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100"><div><span class="font-medium text-gray-700">Subscribed threads</span><p class="text-sm text-gray-500">Updates on threads you follow</p></div><input type="checkbox" id="prefSubscriptions" class="w-5 h-5 text-blue-600 rounded" checked></label>
+        <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+          <div><span class="font-medium text-gray-700">Replies to my posts</span>
+            <p class="text-sm text-gray-500">Get notified when someone replies</p>
+          </div><input type="checkbox" id="prefReplies" class="w-5 h-5 text-blue-600 rounded" checked>
+        </label>
+        <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+          <div><span class="font-medium text-gray-700">Mentions (@username)</span>
+            <p class="text-sm text-gray-500">Get notified when you're mentioned</p>
+          </div><input type="checkbox" id="prefMentions" class="w-5 h-5 text-blue-600 rounded" checked>
+        </label>
+        <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+          <div><span class="font-medium text-gray-700">Subscribed threads</span>
+            <p class="text-sm text-gray-500">Updates on threads you follow</p>
+          </div><input type="checkbox" id="prefSubscriptions" class="w-5 h-5 text-blue-600 rounded" checked>
+        </label>
       </div>
-      <button id="saveSettings" type="button" class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition">Save Settings</button>
+      <button id="saveSettings" type="button"
+        class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition">Save
+        Settings</button>
     </div>
   </div>
   <script>
@@ -141,6 +307,7 @@
     const notificationDropdown = $('notificationDropdown'), notificationList = $('notificationList');
     const markAllReadBtn = $('markAllRead'), openSettingsBtn = $('openSettings');
     const settingsModal = $('settingsModal'), saveSettingsBtn = $('saveSettings');
+    const saveSettingsBtn = $('saveSettings');
 
     let currentUser = JSON.parse(localStorage.getItem('forumUser')) || null;
     const filterState = { search: '', startDate: null, endDate: null, page: 1, perPage: 10 };
@@ -204,9 +371,9 @@
       if (!currentUser) return;
       try {
         const res = await fetch('/api/notifications/' + getOrCreateUserId());
-        if (res.ok) { 
-          const data = await res.json(); 
-          
+        if (res.ok) {
+          const data = await res.json();
+
           // Check for new notifications and show toast (skip first fetch)
           if (data.notifications && !isFirstFetch) {
             data.notifications.forEach(n => {
@@ -215,15 +382,15 @@
               }
             });
           }
-          
+
           // Update seen IDs
           if (data.notifications) {
             data.notifications.forEach(n => seenNotificationIds.add(n.id));
           }
-          
+
           isFirstFetch = false;
-          renderNotifications(data.notifications); 
-          updateNotificationBadge(data.unread_count); 
+          renderNotifications(data.notifications);
+          updateNotificationBadge(data.unread_count);
         }
       } catch (err) { console.error('Notifications error:', err); }
     }
@@ -256,21 +423,21 @@
       toast.onclick = () => { notificationDropdown.classList.remove('hidden'); toast.remove(); };
       toast.querySelector('button').onclick = (e) => { e.stopPropagation(); toast.remove(); };
       toastContainer.appendChild(toast);
-      
+
       // Play sound (optional)
-      try { new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdH2Coverage').play().catch(() => {}); } catch(e) {}
-      
+      try { new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdH2Coverage').play().catch(() => { }); } catch (e) { }
+
       setTimeout(() => toast.remove(), 5000);
     }
 
     async function handleNotificationClick(notifId, postId) {
       // Delete the notification
       await fetch('/api/notifications/' + getOrCreateUserId() + '/read', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ notification_ids: [notifId] }) });
-      
+
       // Refresh notifications to update badge and list
       fetchNotifications();
       notificationDropdown.classList.add('hidden');
-      
+
       // Scroll to the post if postId exists
       if (postId) {
         const postEl = document.querySelector('[data-post-id="' + postId + '"]');
@@ -318,7 +485,7 @@
       if (indicator) indicator.remove();
     }
 
-    function debounce(func, wait) { let timeout; return function(...args) { clearTimeout(timeout); timeout = setTimeout(() => func(...args), wait); }; }
+    function debounce(func, wait) { let timeout; return function (...args) { clearTimeout(timeout); timeout = setTimeout(() => func(...args), wait); }; }
 
     function buildQueryString() {
       const params = new URLSearchParams();
@@ -450,6 +617,16 @@
     initUser();
     fetchPosts();
     setInterval(fetchNotifications, 5000); // Poll every 5 seconds for faster notifications
+
+    // Mobile menu toggle
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileBtn && mobileMenu) {
+      mobileBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
   </script>
 </body>
+
 </html>
