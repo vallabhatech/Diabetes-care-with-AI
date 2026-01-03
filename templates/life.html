@@ -5,53 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Personalized Lifestyle Plan</title>
   <script src="https://cdn.tailwindcss.com"></script>
-<style>
-  /* --- NAVBAR FIXES --- */
-  .navbar {
-    background-color: #1d4ed8; /* blue-700 */
-    color: white;
-    padding: 1rem 1.5rem;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
+  <style>
+    /* --- Navbar Improvement Section --- */
+    .navbar {
+      background-color: #1d4ed8; /* Tailwind blue-700 */
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 0.75rem 0;
+    }
 
-  .navbar-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+    .navbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.5rem;
+    }
 
-  .navbar-title {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: white;
-  }
+    .navbar-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.15), 2px 2px 0 rgba(0,0,0,0.08); /* Kept your 3D style */
+    }
 
-  .navbar-links {
-    display: flex !important; /* Forces horizontal layout */
-    flex-direction: row !important;
-    list-style: none;
-    gap: 1.5rem; /* Space between links */
-    margin: 0;
-    padding: 0;
-  }
+    .navbar-links {
+      display: flex !important; /* Forces items horizontal */
+      list-style: none;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+    }
 
-  .navbar-links a {
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s;
-  }
+    .navbar-links li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: color 0.2s ease;
+    }
 
-  .navbar-links a:hover {
-    color: #93c5fd; /* blue-300 */
-  }
+    .navbar-links li a:hover {
+      color: #bfdbfe; /* Tailwind blue-200 */
+    }
+
+    /* Prevent content from hiding under the fixed navbar */
+    body {
+      padding-top: 80px; 
+    }
+    body {
+      background-image: radial-gradient(#dbeafe 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    #result.show {
+      animation: fadeIn 0.7s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .category-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .category-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #3b82f6;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body class="bg-gradient-to-br from-blue-100 to-purple-100 min-h-screen flex flex-col">
