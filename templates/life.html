@@ -8,7 +8,7 @@
   <style>
     /* --- Navbar Improvement Section --- */
     .navbar {
-      background-color: #1d4ed8; /* Tailwind blue-700 */
+      background-color: #1d4ed8; 
       color: white;
       position: fixed;
       top: 0;
@@ -160,9 +160,8 @@
             placeholder="Calculated automatically"
             class="w-full border border-gray-200 bg-gray-50 rounded-xl px-4 py-2 focus:outline-none cursor-not-allowed shadow-inner font-bold text-blue-700"
             readonly
-            required
           />
-        </div>
+          </div>
 
         <div>
           <label for="activity" class="block font-semibold mb-1 text-gray-700">Physical Activity Level</label>
@@ -200,12 +199,10 @@
     const btnText = document.getElementById('btnText');
     const btnSpinner = document.getElementById('btnSpinner');
     
-    // Elements for BMI calculation
     const weightInput = document.getElementById('weight');
     const heightInput = document.getElementById('height');
     const bmiInput = document.getElementById('bmi');
 
-    // BMI Calculation Logic
     function calculateBMI() {
       const weight = parseFloat(weightInput.value);
       const heightCm = parseFloat(heightInput.value);
@@ -223,19 +220,11 @@
     heightInput.addEventListener('input', calculateBMI);
 
     const categoryIcons = {
-      diet: '🍽️',
-      exercise: '🏃',
-      stress: '🧘',
-      sleep: '😴',
-      monitoring: '📊'
+      diet: '🍽️', exercise: '🏃', stress: '🧘', sleep: '😴', monitoring: '📊'
     };
 
     const categoryTitles = {
-      diet: 'Diet & Nutrition',
-      exercise: 'Exercise & Activity',
-      stress: 'Stress Management',
-      sleep: 'Sleep & Recovery',
-      monitoring: 'Health Monitoring'
+      diet: 'Diet & Nutrition', exercise: 'Exercise & Activity', stress: 'Stress Management', sleep: 'Sleep & Recovery', monitoring: 'Health Monitoring'
     };
 
     function setLoading(loading) {
@@ -247,7 +236,6 @@
 
     function renderPlan(data) {
       const { plan, profile, source } = data;
-      
       let profileHtml = `
         <div class="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
           <h3 class="text-lg font-semibold text-blue-800 mb-2">📋 Your Profile</h3>
@@ -277,30 +265,23 @@
           `;
         }
       }
-
       planHtml += '</div>';
-      
-      if (source === 'ai') {
-        planHtml += '<p class="text-xs text-gray-500 mt-4 text-center">✨ Personalized with AI</p>';
-      }
+      if (source === 'ai') planHtml += '<p class="text-xs text-gray-500 mt-4 text-center">✨ Personalized with AI</p>';
 
       resultDiv.innerHTML = profileHtml + planHtml;
       resultDiv.classList.remove('hidden');
       resultDiv.classList.add('show');
     }
 
-    function renderError(message) {
-      resultDiv.innerHTML = `
-        <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
-          <strong>Error:</strong> ${message}
-        </div>
-      `;
-      resultDiv.classList.remove('hidden');
-      resultDiv.classList.add('show');
-    }
-
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      // Secondary check: Ensure BMI was actually calculated
+      if (!bmiInput.value) {
+        alert("Please enter valid weight and height to calculate your BMI.");
+        return;
+      }
+
       setLoading(true);
 
       const formData = {
@@ -317,15 +298,13 @@
         });
 
         const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to generate plan');
-        }
+        if (!response.ok) throw new Error(data.error || 'Failed to generate plan');
 
         renderPlan(data);
       } catch (error) {
         console.error('Error:', error);
-        renderError(error.message || 'Something went wrong. Please try again.');
+        resultDiv.innerHTML = `<div class="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700"><strong>Error:</strong> ${error.message}</div>`;
+        resultDiv.classList.remove('hidden');
       } finally {
         setLoading(false);
       }
