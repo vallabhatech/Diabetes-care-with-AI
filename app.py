@@ -70,6 +70,7 @@ def inject_i18n_context():
     return {
         'languages': SUPPORTED_LANGUAGES,
         'current_language': get_locale(),
+        'current_year': datetime.now().year,
     }
 
 
