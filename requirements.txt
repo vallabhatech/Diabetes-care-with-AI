@@ -10,4 +10,5 @@ requests
 plotly
 seaborn
 flask_cors
+flask_mail
 
